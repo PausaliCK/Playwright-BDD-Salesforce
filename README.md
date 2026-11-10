@@ -24,14 +24,6 @@ For a headed run:
 npm run test:headed
 ```
 
-## Salesforce credentials
-
-The automation reads the following values from `.env`:
-
-- `SALESFORCE_URL=https://login.salesforce.com`
-- `SALESFORCE_USERNAME=saikat+1@cloudkaptan.com`
-- `SALESFORCE_PASSWORD=Sat082026`
-
 ## Flow implemented
 
 - Login to Salesforce
