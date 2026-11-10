@@ -1,6 +1,7 @@
-import { Given, Then, When, World, IWorldOptions, setDefaultTimeout, setWorldConstructor} from "@cucumber/cucumber";
-import { Browser, BrowserContext, Page, chromium, expect} from "@playwright/test";
+import { After, Given, Then, When, World, IWorldOptions, setDefaultTimeout, setWorldConstructor } from "@cucumber/cucumber";
+import { Browser, BrowserContext, Page, chromium, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker";
+import * as allure from "allure-js-commons";
 import { salesforceConfig } from "../../config/env";
 import { LeadDetailPage } from "../../pages/lead-detail.page";
 import { LeadFormPage } from "../../pages/lead-form.page";
@@ -84,6 +85,23 @@ class SalesforceWorld extends World {
 setWorldConstructor(SalesforceWorld);
 
 setDefaultTimeout(120000);
+
+After(async function (this: SalesforceWorld, scenario) {
+  if (!this.page) {
+    return;
+  }
+
+  try {
+    if (scenario.result && scenario.result.status === "FAILED") {
+      const screenshot = await this.page.screenshot({ fullPage: true });
+      await allure.attachment("failure screenshot", screenshot, "image/png");
+    }
+  } catch (error) {
+    // Intentionally ignore screenshot errors to avoid masking the original failure.
+  } finally {
+    await this.closeBrowser();
+  }
+});
 
 Given(
   "I login to Salesforce using the provided credentials",
