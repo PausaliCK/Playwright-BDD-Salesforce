@@ -56,7 +56,7 @@ class SalesforceWorld extends World {
         await this.page.close();
       }
     } catch (error) {
-      // Force-close the tab before destroying the browser.
+      // Immediate shutdown without waiting.
     }
 
     try {
@@ -64,7 +64,7 @@ class SalesforceWorld extends World {
         await this.context.close();
       }
     } catch (error) {
-      // Force-close the tab before destroying the browser.
+      // Immediate shutdown without waiting.
     }
 
     try {
@@ -72,7 +72,7 @@ class SalesforceWorld extends World {
         await this.browser.close();
       }
     } catch (error) {
-      // Force-close the tab before destroying the browser.
+      // Immediate shutdown without waiting.
     }
 
     this.page = undefined as unknown as Page;
