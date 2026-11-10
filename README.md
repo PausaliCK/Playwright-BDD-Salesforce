@@ -5,7 +5,7 @@ This project contains a Playwright + Cucumber TypeScript setup for a Salesforce 
 ## Project structure
 
 - `src/features/` — BDD feature files
-- `src/stepDefinitions/` — Cucumber step definitions
+- `src/steps/` — Cucumber step definitions
 - `src/pages/` — page object classes
 - `src/config/` — environment settings
 - `playwright.config.ts` — Playwright defaults
