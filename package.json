@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "npx cucumber-js --require-module ts-node/register --require src/specs/**/*.ts src/features/**/*.feature --format progress --format html:reports/cucumber-report.html",
-    "test:headed": "HEADLESS=false npx cucumber-js --require-module ts-node/register --require src/specs/**/*.ts src/features/**/*.feature --format progress",
+    "test": "npx cucumber-js --require-module ts-node/register --require src/steps/**/*.ts src/features/**/*.feature --format progress --format html:reports/cucumber-report.html",
+    "test:headed": "HEADLESS=false npx cucumber-js --require-module ts-node/register --require src/steps/**/*.ts src/features/**/*.feature --format progress",
     "test:report": "npx playwright show-report"
   },
   "devDependencies": {
