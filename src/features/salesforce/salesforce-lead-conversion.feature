@@ -1,8 +1,9 @@
 Feature: Salesforce lead conversion flow
 
-  Scenario: Create, update, and convert a lead
+  @salesforceLeadConversion
+  Scenario: Create a lead, update its status, and convert it
     Given I login to Salesforce using the provided credentials
-    When I open the App Launcher and select Sales
+    And I open the App Launcher and select Sales
     And I open the Leads tab
     And I create a new lead with faker-generated required data
     Then I validate the lead status is "Open - Not Contacted"

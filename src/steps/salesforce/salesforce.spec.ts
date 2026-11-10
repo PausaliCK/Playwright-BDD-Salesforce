@@ -1,11 +1,11 @@
 import { Given, Then, When, World, IWorldOptions, setDefaultTimeout, setWorldConstructor} from "@cucumber/cucumber";
 import { Browser, BrowserContext, Page, chromium, expect} from "@playwright/test";
 import { faker } from "@faker-js/faker";
-import { salesforceConfig } from "../config/env";
-import { LeadDetailPage } from "../pages/lead-detail.page";
-import { LeadFormPage } from "../pages/lead-form.page";
-import { LoginPage } from "../pages/login.page";
-import { SalesPage } from "../pages/sales.page";
+import { salesforceConfig } from "../../config/env";
+import { LeadDetailPage } from "../../pages/lead-detail.page";
+import { LeadFormPage } from "../../pages/lead-form.page";
+import { LoginPage } from "../../pages/login.page";
+import { SalesPage } from "../../pages/sales.page";
 
 class SalesforceWorld extends World {
   browser!: Browser;
@@ -33,7 +33,7 @@ class SalesforceWorld extends World {
     }
 
     this.browser = await chromium.launch({
-      headless: salesforceConfig.headless,
+      headless: false,
     });
 
     this.context = await this.browser.newContext({
@@ -46,6 +46,38 @@ class SalesforceWorld extends World {
     this.leadFormPage = new LeadFormPage(this.page);
     this.leadDetailPage = new LeadDetailPage(this.page);
     this.initialized = true;
+  }
+
+  async closeBrowser() {
+    this.initialized = false;
+
+    try {
+      if (this.page) {
+        await this.page.close();
+      }
+    } catch (error) {
+      // Force-close the tab before destroying the browser.
+    }
+
+    try {
+      if (this.context) {
+        await this.context.close();
+      }
+    } catch (error) {
+      // Force-close the tab before destroying the browser.
+    }
+
+    try {
+      if (this.browser) {
+        await this.browser.close();
+      }
+    } catch (error) {
+      // Force-close the tab before destroying the browser.
+    }
+
+    this.page = undefined as unknown as Page;
+    this.context = undefined as unknown as BrowserContext;
+    this.browser = undefined as unknown as Browser;
   }
 }
 
@@ -69,7 +101,7 @@ Given(
 );
 
 When(
-  "I open the App Launcher and select Sales",
+  'I open the App Launcher and select Sales',
   async function (this: SalesforceWorld) {
     await this.ensureInitialized();
     await this.salesPage.openAppLauncher();
@@ -195,4 +227,6 @@ Then("I click Go to Leads", async function (this: SalesforceWorld) {
       timeout: 30000,
     })
     .catch(() => {});
+
+  await this.closeBrowser();
 });

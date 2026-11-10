@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "npx cucumber-js --require-module ts-node/register --require src/steps/**/*.ts src/features/**/*.feature --format progress --format html:reports/cucumber-report.html",
-    "test:headed": "HEADLESS=false npx cucumber-js --require-module ts-node/register --require src/steps/**/*.ts src/features/**/*.feature --format progress",
-    "test:report": "npx playwright show-report"
+    "test": "npx cucumber-js --config cucumber.js",
+    "test:headed": "HEADLESS=false npx cucumber-js --config cucumber.js",
+    "test:report": "npx playwright show-report",
+    "test:tag": "npx cucumber-js --config cucumber.js --tags"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^13.3.0",

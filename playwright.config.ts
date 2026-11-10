@@ -5,7 +5,7 @@ export default defineConfig({
   expect: {
     timeout: 15000
   },
-  reporter: [['list'], ['html', { outputFolder: 'playwright-report', open: 'never' }]],
+  reporter: [['list'], ['dot'], ['spec'], ['html', { outputFolder: 'playwright-report', open: 'never' }]],
   use: {
     baseURL: 'https://login.salesforce.com',
     headless: false,
