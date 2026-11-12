@@ -1,5 +1,7 @@
 import { IWorldOptions, World, setWorldConstructor } from "@cucumber/cucumber";
 import { Browser, BrowserContext, Page, chromium } from "@playwright/test";
+import { AccountDetailPage } from "../pages/account-detail.page";
+import { AccountFormPage } from "../pages/account-form.page";
 import { LeadDetailPage } from "../pages/lead-detail.page";
 import { LeadFormPage } from "../pages/lead-form.page";
 import { LoginPage } from "../pages/login.page";
@@ -13,10 +15,19 @@ export class SalesforceWorld extends World {
   salesPage!: SalesPage;
   leadFormPage!: LeadFormPage;
   leadDetailPage!: LeadDetailPage;
+  accountFormPage!: AccountFormPage;
+  accountDetailPage!: AccountDetailPage;
   generatedLead = {
     firstName: "",
     lastName: "",
     company: "",
+  };
+  generatedAccount = {
+    accountName: "",
+    accountNumber: "",
+    phone: "",
+    email: "",
+    description: "",
   };
 
   private initialized = false;
@@ -47,6 +58,8 @@ export class SalesforceWorld extends World {
     this.salesPage = new SalesPage(this.page);
     this.leadFormPage = new LeadFormPage(this.page);
     this.leadDetailPage = new LeadDetailPage(this.page);
+    this.accountFormPage = new AccountFormPage(this.page);
+    this.accountDetailPage = new AccountDetailPage(this.page);
     this.initialized = true;
   }
 

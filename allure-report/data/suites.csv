@@ -1,2 +1,2 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","67610","Create a lead, update its status, and convert it","","2026-11-10","passed","2026-11-10","","","",""
+"","74535","Create an account with faker data and validate the saved details","","2026-11-12","passed","2026-11-12","","","",""

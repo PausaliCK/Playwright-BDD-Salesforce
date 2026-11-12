@@ -18,3 +18,16 @@ Feature: Salesforce lead conversion flow
     Then I validate the "Lead has been converted" confirmation
     And I validate the account, contact, and opportunity names in the conversion summary
     And I click Go to Leads
+
+  @salesforceAccountCreation
+  Scenario: Create an account with faker data and validate the saved details
+    Given I login to Salesforce using the provided credentials
+    And I open the App Launcher and select Sales
+    And I open the Accounts tab
+    And I create a new account with faker-generated details
+    Then I click the Details tab
+    And I validate the account details are saved correctly
+    And I scroll down and validate the account description
+    And I click the Accounts tab again
+
+

@@ -33,6 +33,11 @@ When("I open the Leads tab", async function (this: SalesforceWorld) {
   await this.salesPage.goToLeadHome();
 });
 
+When("I open the Accounts tab", async function (this: SalesforceWorld) {
+  await this.ensureInitialized();
+  await this.salesPage.goToAccountHome();
+});
+
 When(
   "I create a new lead with faker-generated required data",
   async function (this: SalesforceWorld) {
@@ -137,6 +142,56 @@ Then(
     );
   },
 );
+
+When(
+  "I create a new account with faker-generated details",
+  async function (this: SalesforceWorld) {
+    await this.ensureInitialized();
+
+    this.generatedAccount.accountName = faker.company.name();
+    this.generatedAccount.accountNumber = faker.finance.accountNumber({ length: 9 });
+    this.generatedAccount.phone = faker.phone.number({ style: "international" });
+    this.generatedAccount.email = faker.internet.email({
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    });
+    this.generatedAccount.description = faker.lorem.paragraph();
+
+    await this.salesPage.clickNewAccount();
+    await this.accountFormPage.fillData(this.generatedAccount);
+    await this.accountFormPage.save();
+    await this.accountDetailPage.waitForPageReady();
+    await this.accountDetailPage.clickDetailsTab();
+  },
+);
+
+Then("I click the Details tab", async function (this: SalesforceWorld) {
+  await this.ensureInitialized();
+  await this.accountDetailPage.clickDetailsTab();
+});
+
+Then(
+  "I validate the account details are saved correctly",
+  async function (this: SalesforceWorld) {
+    await this.ensureInitialized();
+    await this.accountDetailPage.clickDetailsTab();
+    await this.accountDetailPage.validateSavedData(this.generatedAccount);
+  },
+);
+
+Then(
+  "I scroll down and validate the account description",
+  async function (this: SalesforceWorld) {
+    await this.ensureInitialized();
+    await this.accountDetailPage.scrollToDescription();
+    await this.accountDetailPage.validateDescription(this.generatedAccount.description);
+  },
+);
+
+Then("I click the Accounts tab again", async function (this: SalesforceWorld) {
+  await this.ensureInitialized();
+  await this.accountDetailPage.clickAccountsTabAgain();
+});
 
 Then("I click Go to Leads", async function (this: SalesforceWorld) {
   await this.ensureInitialized();

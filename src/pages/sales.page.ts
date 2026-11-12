@@ -57,7 +57,35 @@ export class SalesPage {
     await this.page.goto(`${origin}/lightning/o/Lead/list?filterName=Recent`);
   }
 
+  async goToAccountHome() {
+    const accountCandidates = [
+      this.page.getByRole('link', { name: /accounts?/i }),
+      this.page.getByRole('button', { name: /accounts?/i }),
+      this.page.locator('[title="Accounts"]'),
+      this.page.locator('[aria-label="Accounts"]')
+    ];
+
+    for (const candidate of accountCandidates) {
+      if (await candidate.count()) {
+        const first = candidate.first();
+        if (await first.isVisible().catch(() => false)) {
+          await first.click();
+          return;
+        }
+      }
+    }
+
+    const origin = new URL(this.page.url()).origin;
+    await this.page.goto(`${origin}/lightning/o/Account/list?filterName=Recent`);
+  }
+
   async clickNewLead() {
+    const newButton = this.page.getByRole('button', { name: /^new$/i }).first();
+    await newButton.waitFor({ state: 'visible', timeout: 20000 });
+    await newButton.click({ force: true });
+  }
+
+  async clickNewAccount() {
     const newButton = this.page.getByRole('button', { name: /^new$/i }).first();
     await newButton.waitFor({ state: 'visible', timeout: 20000 });
     await newButton.click({ force: true });
