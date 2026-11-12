@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 export const salesforceConfig = {
   url: process.env.SALESFORCE_URL || 'https://login.salesforce.com',
