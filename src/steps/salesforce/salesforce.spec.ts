@@ -1,4 +1,4 @@
-import { After, Given, Then, When, World, IWorldOptions, setDefaultTimeout, setWorldConstructor } from "@cucumber/cucumber";
+import { After, AfterStep, Given, Then, When, World, IWorldOptions, setDefaultTimeout, setWorldConstructor } from "@cucumber/cucumber";
 import { Browser, BrowserContext, Page, chromium, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import * as allure from "allure-js-commons";
@@ -85,6 +85,18 @@ class SalesforceWorld extends World {
 setWorldConstructor(SalesforceWorld);
 
 setDefaultTimeout(120000);
+
+AfterStep(async function (this: SalesforceWorld, step) {
+  const stepStatus = step.result?.status ?? "UNKNOWN";
+  const stepText = step.pickleStep?.text ?? "Unknown step";
+  const icon = stepStatus === "PASSED" ? "✅" : stepStatus === "FAILED" ? "❌" : "⚠️";
+
+  console.log(`${icon} Step result: ${stepStatus} - ${stepText}`);
+
+  if (step.result?.exception) {
+    console.log(`Exception: ${step.result.exception.message || step.result.exception}`);
+  }
+});
 
 After(async function (this: SalesforceWorld, scenario) {
   if (!this.page) {

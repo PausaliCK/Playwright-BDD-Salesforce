@@ -4,8 +4,8 @@ export class LeadDetailPage {
   constructor(private readonly page: Page) {}
 
   async waitForPageReady() {
-    await this.page.waitForLoadState('domcontentloaded');
-    await this.page.waitForTimeout(3000);
+    await this.page.waitForLoadState('domcontentloaded').catch(() => undefined);
+    await this.page.waitForTimeout(1000);
   }
 
   async expectStatus(statusText: string) {
@@ -19,29 +19,36 @@ export class LeadDetailPage {
   }
 
   async expandSection(sectionName: string) {
+    const namePattern = new RegExp(sectionName, 'i');
     const exactName = new RegExp(`^${sectionName}$`, 'i');
     const candidates = [
       this.page.locator(`button[aria-label*="${sectionName}"]`),
       this.page.locator(`button[title*="${sectionName}"]`),
-      this.page.locator(`[data-name="${sectionName}"]`),
-      this.page.locator('button').filter({ hasText: exactName }),
-      this.page.locator('summary').filter({ hasText: exactName }),
+      this.page.locator(`button[data-name*="${sectionName}"]`),
+      this.page.locator(`[data-name*="${sectionName}"]`),
+      this.page.locator(`[data-label*="${sectionName}"]`),
+      this.page.locator('[role="button"]').filter({ hasText: namePattern }),
+      this.page.locator('button').filter({ hasText: namePattern }),
+      this.page.locator('summary').filter({ hasText: namePattern }),
+      this.page.getByText(namePattern, { exact: false }),
       this.page.getByText(exactName, { exact: true })
     ];
 
     for (const candidate of candidates) {
-      if (await candidate.count()) {
-        const first = candidate.first();
-        await first.waitFor({ state: 'visible', timeout: 20000 }).catch(() => undefined);
-        if (await first.isVisible().catch(() => false)) {
-          await first.click({ force: true });
+      const count = await candidate.count().catch(() => 0);
+      for (let index = 0; index < count; index += 1) {
+        const element = candidate.nth(index);
+        await element.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+        if (await element.isVisible().catch(() => false)) {
+          await element.click({ force: true });
           return;
         }
       }
     }
 
-    await this.page.getByText(exactName).first().waitFor({ state: 'visible', timeout: 20000 });
-    await this.page.getByText(exactName).first().click({ force: true });
+    const fallback = this.page.locator('button, summary, [role="button"]').filter({ hasText: namePattern }).first();
+    await fallback.waitFor({ state: 'visible', timeout: 20000 });
+    await fallback.click({ force: true });
   }
 
   async validateRecordName(recordName: string | RegExp) {
@@ -83,6 +90,6 @@ export class LeadDetailPage {
 
     const origin = new URL(this.page.url()).origin;
     await this.page.goto(`${origin}/lightning/o/Lead/list?filterName=Recent`, { waitUntil: 'domcontentloaded' });
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForTimeout(1000);
   }
 }
